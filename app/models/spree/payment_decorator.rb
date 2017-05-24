@@ -2,6 +2,8 @@ Spree::Payment.class_eval do
   self.send(:remove_const, :INVALID_STATES)
   INVALID_STATES      = %w(failed invalid disputed).freeze
 
+  scope :disputed, -> { with_state('disputed') }
+  
   # Redefine state 
   state_machine initial: :checkout do
     state :disputed
