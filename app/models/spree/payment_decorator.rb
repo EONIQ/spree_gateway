@@ -1,9 +1,10 @@
 Spree::Payment.class_eval do 
   self.send(:remove_const, :INVALID_STATES)
-  INVALID_STATES      = %w(failed invalid disputed).freeze
+  INVALID_STATES      = %w(failed invalid disputed withdrawn).freeze
 
-  scope :disputed, -> { with_state('disputed') }
-  
+  scope :disputed, -> { with_state(['disputed', 'withdrawn']) }
+  scope :completed, -> { with_state(['completed', 'reinstated']) }
+
   # Redefine state 
   state_machine initial: :checkout do
     state :disputed
@@ -11,8 +12,18 @@ Spree::Payment.class_eval do
       transition from: [:completed], to: :disputed
     end
 
-    after_transition to: :disputed do |payment, transition|
-      payment.order.updater.update
+    state :reinstated
+    event :reinstate do
+      transition from: [:disputed], to: :reinstated
+    end
+
+    state :withdrawn
+    event :withdraw do
+      transition from: [:disputed], to: :withdrawn
+    end
+
+    after_transition to: [:disputed, :reinstated, :withdrawn] do |payment, transition|
+      payment.update_order
     end
   end
 end
