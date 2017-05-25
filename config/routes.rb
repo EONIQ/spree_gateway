@@ -1,5 +1,3 @@
-require "stripe_event"
-
 Spree::Core::Engine.add_routes do
   # Add your extension routes here
   resources :orders, :only => [] do
@@ -12,5 +10,8 @@ Spree::Core::Engine.add_routes do
   end
 
   post '/skrill' => 'skrill_status#update'
-  mount StripeEvent::Engine, at: '/stripe/webhook'
+end
+
+Rails.application.routes.draw do
+  mount StripeEvent::Engine => '/stripe'
 end
