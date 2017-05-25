@@ -1,6 +1,7 @@
 ---
 en:
   spree:
+    dispute: dispute
     payment_has_been_cancelled: The payment has been cancelled.
     complete_skrill_checkout: Please complete Skrill checkout before continuing
     skrill: Skrill

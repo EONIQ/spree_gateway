@@ -15,4 +15,8 @@ Spree::Payment.class_eval do
       payment.order.updater.update
     end
   end
+
+  def can_dispute?
+    completed?
+  end
 end
