@@ -1,9 +1,5 @@
 @import "spree/backend/components/variables";
 
-.label-disputed {
-  background-color: $brand-danger;
-}
-
-.label-on_hold {
+.label-disputed, .label-on_hold, .label-reinstated {
   background-color: $brand-danger;
 }
