@@ -1,5 +1,4 @@
 Spree::Payment.class_eval do 
-  self.send(:remove_const, :INVALID_STATES)
   INVALID_STATES      = %w(failed invalid disputed withdrawn).freeze
 
   scope :disputed, -> { with_state(['disputed', 'withdrawn']) }
