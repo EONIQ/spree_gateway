@@ -27,22 +27,6 @@ Spree::Payment.class_eval do
     event :withdraw do
       transition from: [:disputed], to: :withdrawn
     end
-
-    after_transition to: [:disputed, :reinstated, :withdrawn] do |payment, transition|
-      if payment.completed? || payment.void?
-        payment.order.updater.update_payment_total
-      end
-
-      if payment.order.completed?
-        payment.order.updater.update_payment_state
-        payment.order.updater.update_shipments
-        payment.order.updater.update_shipment_state
-      end
-
-      if payment.completed? || payment.order.completed?
-        payment.order.persist_totals
-      end
-    end
   end
 
   def can_dispute?
