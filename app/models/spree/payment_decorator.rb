@@ -29,7 +29,19 @@ Spree::Payment.class_eval do
     end
 
     after_transition to: [:disputed, :reinstated, :withdrawn] do |payment, transition|
-      payment.update_order
+      if payment.completed? || payment.void?
+        payment.order.updater.update_payment_total
+      end
+
+      if payment.order.completed?
+        payment.order.updater.update_payment_state
+        payment.order.updater.update_shipments
+        payment.order.updater.update_shipment_state
+      end
+
+      if payment.completed? || payment.order.completed?
+        payment.order.persist_totals
+      end
     end
   end
 
